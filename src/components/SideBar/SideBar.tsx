@@ -4,10 +4,10 @@ import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import profileImg from "../../assets/pexels-photo-2379004 1.png"
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
-const SideBar = () => {
+const SideBar = ({setIsCollapsed,isCollapsed}) => {
 
-  const [isCollapsed, setIsCollapsed] = useState(false);
-  const isScreenSmall = useMediaQuery({ query: "(max-width: 768px)" });
+ 
+  const isScreenSmall = useMediaQuery({ query: "(max-width: 678px)" });
   const [toggled, setToggled] = useState(false);
   return <>
     {isScreenSmall ? <>
@@ -17,11 +17,11 @@ const SideBar = () => {
 
           <Menu className="vh-100" style={{ backgroundColor: "#F2EAE1" }}>
 
-            <i onClick={() => setIsCollapsed(!isCollapsed)} className="fa-solid fa-arrow-left px-5"></i>
+          <i onClick={() => setIsCollapsed(!isCollapsed)} className="fa-solid fa-arrow-left px-5"></i>
 
             <div className="text-center pt-5">
               <img src={profileImg} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="" />
-              <h4 className={`${isCollapsed && "fs-6"}`}>Mohamed Samir</h4>
+              {isCollapsed?"":<h4 >Mohamed Samir</h4>}
             </div>
 
             <div>
@@ -51,11 +51,11 @@ const SideBar = () => {
 
           <Menu style={{ backgroundColor: "#F2EAE1" }}>
 
-            <i onClick={() => setIsCollapsed(!isCollapsed)} className="fa-solid fa-arrow-left px-5"></i>
+           
 
             <div className="text-center pt-5">
               <img src={profileImg} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="" />
-              <h4 className={`${isCollapsed && "fs-6"}`}>Mohamed Samir</h4>
+              {isCollapsed?"":<h4 >Mohamed Samir</h4>}
             </div>
 
             <div>

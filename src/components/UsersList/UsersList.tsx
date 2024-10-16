@@ -5,27 +5,32 @@ import User from "../User/User";
 
 const UsersList = () => {
     const [users, setUsers] = useState([]);
-    async function getUsers() {
-        const res = await axios.get(`https://dummyjson.com/users`)
-        console.log(res.data.users);
-        setUsers(res.data.users)
+    const [isLoading, setIsLoading] = useState(false);
+    const [errorFound, setError] = useState(false);
 
+    async function getUsers() {
+        try {
+            const res = await axios.get(`https://dummyjson.com/users`); // Intentionally incorrect URL to trigger error
+            console.log(res.data.users);
+            setUsers(res.data.users);
+        } catch (error) {
+            console.log("Error fetching users:", error.message);
+            setError(true);  // Set the error state if the request fails
+        } finally {
+            setIsLoading(false);  // Ensure loading state is turned off
+        }
     }
     async function deleteUser(id) {
         const res = await axios.delete(`https://dummyjson.com/users/${id}`)
         console.log(res.data);
-        setUsers(users=>users.filter((user)=>user.id!==id))
+        setUsers(users => users.filter((user) => user.id !== id))
 
     }
-    
-    useEffect(() => {
-        try {
-            getUsers()
-        } catch (error) {
-            console.log(error);
 
-        }
-    }, [])
+    useEffect(() => {
+        setIsLoading(true);
+        getUsers();
+    }, []);
     return (
         <section className={`${styles.sectionBg} container `}>
             <div className="d-flex justify-content-between mb-3">
@@ -33,22 +38,26 @@ const UsersList = () => {
                 <button style={{ backgroundColor: "#FEAF00" }} className="btn text-white">Add New User</button>
             </div>
             <hr />
-            <div className="table-responsive">
-                <table className="table">
-                    <thead>
-                        <tr className="text-muted">
-                            <th></th>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Phone</th>
-                            <th>BirthDate</th>
-                            <th></th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody>{users.map((user) => <User onDelete={deleteUser} key={user.id} user={user} />)}</tbody>
-                </table>
-            </div>
+            {errorFound ?
+                <div className="d-flex justify-content-center align-items-center vh-100"> error fetching users</div>
+                : isLoading ? <div className="d-flex fs-1 justify-content-center align-items-center vh-100"> <i className="fa-solid fa-spinner spin"></i></div> :
+                    <div className="table-responsive">
+                        <table className="table">
+                            <thead>
+                                <tr className="text-muted">
+                                    <th></th>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>BirthDate</th>
+                                    <th></th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>{users.map((user) => <User onDelete={deleteUser} key={user.id} user={user} />)}</tbody>
+                        </table>
+                    </div>
+            }
 
         </section>
     )
