@@ -11,7 +11,7 @@ const MasterLayout = () => {
                 <div className="">
                     <SideBar />
                 </div>
-                <div className="w-100">
+                <div className="w-100" style={{backgroundColor:"#F8F8F8"}}>
                     <NavBar />
                     <Outlet />
                 </div>
