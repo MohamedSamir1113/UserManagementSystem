@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import styles from "./UsersList.module.css"
 import axios from "axios";
 import User from "../User/User";
+import { toast, ToastContainer } from "react-toastify";
 
 const UsersList = () => {
     const [users, setUsers] = useState([]);
@@ -24,6 +25,7 @@ const UsersList = () => {
         const res = await axios.delete(`https://dummyjson.com/users/${id}`)
         console.log(res.data);
         setUsers(users => users.filter((user) => user.id !== id))
+        toast.success("User Deleted Successfully 🚮");
 
     }
 
@@ -33,6 +35,7 @@ const UsersList = () => {
     }, []);
     return (
         <section className={`${styles.sectionBg} container `}>
+             <ToastContainer theme="dark"/>
             <div className="d-flex justify-content-between mb-3">
                 <h3>UserList</h3>
                 <button style={{ backgroundColor: "#FEAF00" }} className="btn text-white">Add New User</button>
@@ -40,7 +43,7 @@ const UsersList = () => {
             <hr />
             {errorFound ?
                 <div className="d-flex justify-content-center align-items-center vh-100"> error fetching users</div>
-                : isLoading ? <div className="d-flex fs-1 justify-content-center align-items-center vh-100"> <i className="fa-solid fa-spinner spin"></i></div> :
+                : isLoading ? <div className="d-flex fs-1 justify-content-center align-items-center vh-100"> <i className={`fa-solid fa-spinner ${styles.spin}`}></i></div> :
                     <div className="table-responsive">
                         <table className="table">
                             <thead>

@@ -20,3 +20,12 @@
     background: linear-gradient(to right, rgba(254, 175, 0, 0.9), rgba(254, 175, 0, 0.7));
     border-radius: 10px;
 }
+
+.spin {
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
