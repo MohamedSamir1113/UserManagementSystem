@@ -5,9 +5,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import style from "./Login.module.css"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
 
 const Login = () => {
     const { register, handleSubmit, formState: { errors } } = useForm()
+    const {saveUserData}=useAuth()
     const navigate = useNavigate()
     const onSubmit = async (data) => {
         // console.log(data);
@@ -15,6 +17,8 @@ const Login = () => {
         try {
             const res = await axios.post(`https://dummyjson.com/auth/login`, data)
             console.log(res);
+            localStorage.setItem("userToken",res.data.accessToken)
+            saveUserData()
             navigate("dashboard");
         } catch (error) {
             console.log(error.message);

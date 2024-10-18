@@ -7,13 +7,16 @@ import UsersList from "./components/UsersList/UsersList"
 import Profile from "./components/Profile/Profile"
 import UserData from "./components/UserData/UserData"
 import NotFound from "./components/NotFound/NotFound"
+import { useState } from "react"
+
 
 function App() {
+  const [userData, setUserData] = useState({})
   const router = createBrowserRouter([
     {
       path: "",
       element: <AuthLayout />,
-      errorElement:<NotFound/>,
+      errorElement: <NotFound />,
       children: [
         { index: true, element: <Login /> },
         { path: "login", element: <Login /> }
@@ -21,20 +24,21 @@ function App() {
     },
     {
       path: "dashboard",
-      element: <MasterLayout/>,
-      errorElement:<NotFound/>,
+      element: <MasterLayout />,
+      errorElement: <NotFound />,
       children: [
-        { index: true, element: <Home/> },
-        { path: "home", element: <Home/> },
-        { path: "users", element: <UsersList/> },
-        { path: "profile", element: <Profile/> },
-        { path: "user-data", element: <UserData/> },
+        { index: true, element: <Home /> },
+        { path: "home", element: <Home /> },
+        { path: "users", element: <UsersList setUserData={setUserData} /> },
+        { path: "profile", element: <Profile /> },
+        { path: "user-data", element: <UserData userData={userData} setUserData={setUserData} /> },
       ]
     },
   ])
 
   return (
     <>
+      
       <RouterProvider router={router} />
     </>
   )

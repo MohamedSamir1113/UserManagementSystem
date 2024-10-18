@@ -3,11 +3,14 @@ import styles from "./UsersList.module.css"
 import axios from "axios";
 import User from "../User/User";
 import { toast, ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useUser } from "../../contexts/UserContext";
 
-const UsersList = () => {
-    const [users, setUsers] = useState([]);
+const UsersList = ({setUserData}) => {
+    const { users,setUsers} = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [errorFound, setError] = useState(false);
+    const navigate=useNavigate()
 
     async function getUsers() {
         try {
@@ -23,12 +26,17 @@ const UsersList = () => {
     }
     async function deleteUser(id) {
         const res = await axios.delete(`https://dummyjson.com/users/${id}`)
-        console.log(res.data);
         setUsers(users => users.filter((user) => user.id !== id))
+        console.log(res.data);
         toast.success("User Deleted Successfully 🚮");
 
     }
-
+    async function getUserToBeUpdated(id,data) {
+        setUserData(data)
+        navigate("/dashboard/user-data")
+        
+       
+    }
     useEffect(() => {
         setIsLoading(true);
         getUsers();
@@ -57,7 +65,7 @@ const UsersList = () => {
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>{users.map((user) => <User onDelete={deleteUser} key={user.id} user={user} />)}</tbody>
+                            <tbody>{users.map((user) => <User onUpdate={getUserToBeUpdated} onDelete={deleteUser} key={user.id} user={user} />)}</tbody>
                         </table>
                     </div>
             }

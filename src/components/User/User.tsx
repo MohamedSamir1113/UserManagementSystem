@@ -1,6 +1,25 @@
+import { useState } from "react";
+import { Button, Modal } from "react-bootstrap";
 
-const User = ({user,onDelete}) => {
-    const {email,firstName,image,phone,birthDate,id}=user
+const User = ({ user, onDelete ,onUpdate}) => {
+    const { email, firstName, image, phone, birthDate, id } = user
+    const [show, setShow] = useState(false);
+    //const navigete=useNavigate("/user-data")
+
+    const handleDelete = (id) => {
+        setShow(false)
+        onDelete(id)
+    };
+    const handleClose = () => {
+        setShow(false)
+    };
+    const handleShow = () => setShow(true);
+    
+    function handleUpdate(id,userData) {
+    const {email, firstName, lastName, phone, birthDate}=userData
+    onUpdate(id,userData);
+    
+    }
     return (
         <>
             <tr>
@@ -9,10 +28,28 @@ const User = ({user,onDelete}) => {
                 <td className="col-1">{email}</td>
                 <td>{phone}</td>
                 <td>{birthDate}</td>
-                
-                <td><i className="fa-solid fa-pen text-warning"></i></td>
-                <td><i style={{cursor:"pointer"}} onClick={()=>onDelete(id)} className="fa-solid fa-trash-can text-warning"></i></td>
+
+                <td><i onClick={()=>handleUpdate(id,user)} className="fa-solid fa-pen text-warning"></i></td>
+
+                <td> <Button className="bg-transparent border-0 p-0 m-0" onClick={handleShow}>
+                    <i style={{ cursor: "pointer" }} className="fa-solid fa-trash-can text-warning"></i>
+                </Button></td>
             </tr>
+
+            <Modal show={show} onHide={() => handleClose()}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Remove {firstName}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>Are you sure you want to remove {firstName} from the list of users?</Modal.Body>
+                <Modal.Footer>
+                    <Button variant="secondary" onClick={() => handleClose()}>
+                        Close
+                    </Button>
+                    <Button variant="primary" onClick={() => handleDelete(id)}>
+                        Save Changes
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
 }

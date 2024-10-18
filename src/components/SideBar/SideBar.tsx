@@ -4,8 +4,10 @@ import { Sidebar, Menu, MenuItem } from 'react-pro-sidebar';
 import profileImg from "../../assets/pexels-photo-2379004 1.png";
 import { useState } from "react";
 import { useMediaQuery } from "react-responsive";
+import { useAuth } from "../../contexts/AuthContext";
 
 const SideBar = ({ setIsCollapsed, isCollapsed }) => {
+  const {loggedUser}=useAuth()
   const location = useLocation(); // Get the current URL path
   const isScreenSmall = useMediaQuery({ query: "(max-width: 678px)" });
   const [toggled, setToggled] = useState(false);
@@ -40,7 +42,7 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
                   Users
                 </MenuItem>
                 <MenuItem style={getMenuItemStyle("/dashboard/user-data")} icon={<i className="fa fa-user-plus"></i>} component={<Link to="user-data" />}>
-                  Add User
+                  User Data
                 </MenuItem>
                 <MenuItem style={getMenuItemStyle("/dashboard/profile")} icon={<i className="fa-solid fa-id-card"></i>} component={<Link to="profile" />}>
                   Profile
@@ -64,8 +66,8 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
           <Sidebar collapsed={isCollapsed}>
             <Menu style={{ backgroundColor: "#F2EAE1" }}>
               <div className="text-center pt-5">
-                <img src={profileImg} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="Profile" />
-                {!isCollapsed && <h4>Mohamed Samir</h4>}
+                <img src={loggedUser.image} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="Profile" />
+                {!isCollapsed && <h4>{loggedUser.username}</h4>}
               </div>
 
               <div className="py-5">
@@ -76,7 +78,7 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
                   Users
                 </MenuItem>
                 <MenuItem style={getMenuItemStyle("/dashboard/user-data")} icon={<i className="fa fa-user-plus"></i>} component={<Link to="user-data" />}>
-                  Add User
+                User Data
                 </MenuItem>
                 <MenuItem style={getMenuItemStyle("/dashboard/profile")} icon={<i className="fa-solid fa-id-card"></i>} component={<Link to="profile" />}>
                   Profile
@@ -84,7 +86,7 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
               </div>
 
               <div>
-                <MenuItem style={getMenuItemStyle("/")} icon={<i className="fa-solid fa-right-from-bracket"></i>} component={<Link to="/" />}>
+                <MenuItem onClick={()=>localStorage.setItem("userToken","")} style={getMenuItemStyle("/")} icon={<i className="fa-solid fa-right-from-bracket"></i>} component={<Link to="/" />}>
                   Log Out
                 </MenuItem>
               </div>
