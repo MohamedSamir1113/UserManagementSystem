@@ -66,8 +66,8 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
           <Sidebar collapsed={isCollapsed}>
             <Menu style={{ backgroundColor: "#F2EAE1" }}>
               <div className="text-center pt-5">
-                <img src={loggedUser.image} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="Profile" />
-                {!isCollapsed && <h4>{loggedUser.username}</h4>}
+                <img src={loggedUser?.image} className={`${isCollapsed && "w-100"}`} style={{ borderRadius: "50%", backgroundColor: "transparent" }} alt="Profile" />
+                {!isCollapsed && <h4>{loggedUser?.username}</h4>}
               </div>
 
               <div className="py-5">

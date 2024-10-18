@@ -9,6 +9,7 @@ function AuthProvider({ children }) {
         const encodedToken = localStorage.getItem("userToken")
         const decodedToken=jwtDecode(encodedToken)
         setLoggedUser(decodedToken);
+        console.log(decodedToken);
     }
 
     useEffect(() => {
