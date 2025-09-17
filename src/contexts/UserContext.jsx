@@ -5,6 +5,7 @@ const UserContext = createContext(undefined);
 
 function UserProvider({ children }) {
     const [users, setUsers] = useState([]);
+    const [searchQuery, setSearchQuery] = useState("");
 
     const updateUser = async (id, data) => {
         try {
@@ -44,7 +45,7 @@ function UserProvider({ children }) {
 
     return (
         <>
-            <UserContext.Provider value={{ users, setUsers, updateUser, addUser, deleteUser }}>
+            <UserContext.Provider value={{ users, setUsers, updateUser, addUser, deleteUser, searchQuery, setSearchQuery }}>
                 {children}
             </UserContext.Provider>
         </>

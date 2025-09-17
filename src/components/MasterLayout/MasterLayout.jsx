@@ -5,7 +5,7 @@ import { useState } from 'react';
 
 
 const MasterLayout = () => {
-    const [isCollapsed, setIsCollapsed] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(true);
     return <>
         
             <div className="d-flex">

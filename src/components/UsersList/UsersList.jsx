@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 
 const UsersList = ({ setUserData }) => {
-    const { users, setUsers, deleteUser: contextDeleteUser } = useUser();
+    const { users, setUsers, deleteUser: contextDeleteUser, searchQuery } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [errorFound, setError] = useState(false);
     const navigate = useNavigate();
@@ -82,7 +82,22 @@ const UsersList = ({ setUserData }) => {
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>{users.map((user) => (
+                            <tbody>{users
+                                .filter((user) => {
+                                    const q = (searchQuery || "").toLowerCase();
+                                    if (!q) return true;
+                                    const name = `${user.firstName ?? ""} ${user.lastName ?? ""}`.toLowerCase();
+                                    const email = (user.email ?? "").toLowerCase();
+                                    const phone = (user.phone ?? "").toLowerCase();
+                                    const birth = (user.birthDate ?? "").toLowerCase();
+                                    return (
+                                        name.includes(q) ||
+                                        email.includes(q) ||
+                                        phone.includes(q) ||
+                                        birth.includes(q)
+                                    );
+                                })
+                                .map((user) => (
                                 <User onUpdate={getUserToBeUpdated} onDelete={deleteUser} key={user.id} user={user} />
                             ))}</tbody>
                         </table>

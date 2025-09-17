@@ -31,7 +31,7 @@ function useAuth() {
     if (context === undefined) throw new Error("context out of provider");
     return context;
   }
-// eslint-disable-next-line react-refresh/only-export-components
+
 export { AuthProvider, useAuth };
 
 
