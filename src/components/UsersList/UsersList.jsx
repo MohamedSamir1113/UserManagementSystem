@@ -1,52 +1,69 @@
 import { useEffect, useState } from "react";
-import styles from "./UsersList.module.css"
+import styles from "./UsersList.module.css";
 import axios from "axios";
 import User from "../User/User";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 
-const UsersList = ({setUserData}) => {
-    const { users,setUsers} = useUser();
+const UsersList = ({ setUserData }) => {
+    const { users, setUsers, deleteUser: contextDeleteUser } = useUser();
     const [isLoading, setIsLoading] = useState(false);
     const [errorFound, setError] = useState(false);
-    const navigate=useNavigate()
+    const navigate = useNavigate();
 
     async function getUsers() {
         try {
-            const res = await axios.get(`https://dummyjson.com/users`); // Intentionally incorrect URL to trigger error
+            const res = await axios.get(`https://dummyjson.com/users`);
             console.log(res.data.users);
             setUsers(res.data.users);
         } catch (error) {
-            console.log("Error fetching users:", error.message);
-            setError(true);  // Set the error state if the request fails
+            const message = error instanceof Error ? error.message : String(error);
+            console.log("Error fetching users:", message);
+            setError(true);
         } finally {
-            setIsLoading(false);  // Ensure loading state is turned off
+            setIsLoading(false);
         }
     }
+    
     async function deleteUser(id) {
-        const res = await axios.delete(`https://dummyjson.com/users/${id}`)
-        setUsers(users => users.filter((user) => user.id !== id))
-        console.log(res.data);
-        toast.success("User Deleted Successfully 🚮");
-
+        try {
+            await contextDeleteUser(id);
+            toast.success("User Deleted Successfully 🚮");
+        } catch (error) {
+            toast.error("Failed to delete user. Please try again.");
+            console.error("Error deleting user:", error);
+        }
     }
-    async function getUserToBeUpdated(id,data) {
+    async function getUserToBeUpdated(_id, data) {
         setUserData(data)
         navigate("/dashboard/user-data")
         
        
     }
     useEffect(() => {
-        setIsLoading(true);
-        getUsers();
-    }, []);
+        if (users.length === 0) {
+            setIsLoading(true);
+            getUsers();
+        }
+        // if users already exist (e.g., after adding), skip refetch to avoid overwrite
+    }, [users.length]);
+   
     return (
         <section className={`${styles.sectionBg} container `}>
              <ToastContainer theme="dark"/>
             <div className="d-flex justify-content-between mb-3">
                 <h3>UserList</h3>
-                <button style={{ backgroundColor: "#FEAF00" }} className="btn text-white">Add New User</button>
+                <button 
+                    style={{ backgroundColor: "#FEAF00" }} 
+                    className="btn text-white"
+                    onClick={() => {
+                        setUserData({});
+                        navigate("/dashboard/user-data");
+                    }}
+                >
+                    Add New User
+                </button>
             </div>
             <hr />
             {errorFound ?
@@ -65,7 +82,9 @@ const UsersList = ({setUserData}) => {
                                     <th></th>
                                 </tr>
                             </thead>
-                            <tbody>{users.map((user) => <User onUpdate={getUserToBeUpdated} onDelete={deleteUser} key={user.id} user={user} />)}</tbody>
+                            <tbody>{users.map((user) => (
+                                <User onUpdate={getUserToBeUpdated} onDelete={deleteUser} key={user.id} user={user} />
+                            ))}</tbody>
                         </table>
                     </div>
             }
@@ -74,3 +93,5 @@ const UsersList = ({setUserData}) => {
     )
 }
 export default UsersList;
+
+

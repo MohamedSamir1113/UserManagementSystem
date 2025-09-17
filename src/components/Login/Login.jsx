@@ -12,8 +12,6 @@ const Login = () => {
     const {saveUserData}=useAuth()
     const navigate = useNavigate()
     const onSubmit = async (data) => {
-        // console.log(data);
-        //todo:api integration
         try {
             const res = await axios.post(`https://dummyjson.com/auth/login`, data)
             console.log(res);
@@ -61,3 +59,5 @@ const Login = () => {
 
 
 export default Login;
+
+

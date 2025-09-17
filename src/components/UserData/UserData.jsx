@@ -1,20 +1,14 @@
-import axios from "axios";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { toast, ToastContainer } from "react-toastify";
 
-const UserData = ({ userData,setUserData  }) => {
-    let { firstName, lastName, email, phone, age, id, birthDate } = userData;
-    const {
-        register,
-        handleSubmit,
-        setValue,
-        formState: { errors },
-    } = useForm();
-    const navigate=useNavigate()
+const UserData = ({ userData, setUserData }) => {
+    let { firstName, lastName, email, phone, age, id, birthDate } = userData || {};
+    const { register, handleSubmit, setValue, formState: { errors } } = useForm();
+    const navigate = useNavigate();
     
-    // Pre-populate form fields when userData is passed (for update)
     useEffect(() => {
         if (userData) {
             setValue("firstName", firstName);
@@ -27,44 +21,29 @@ const UserData = ({ userData,setUserData  }) => {
        
     }, [userData, setValue, firstName, lastName, email, phone, age, birthDate]);
     
-    const { setUsers} = useUser();
-    const addUser = async (data) => {
-    
-        try {
-            const res = await axios.post(`https://dummyjson.com/users/add`, data);
-            console.log(res.data);
-            setUsers((prevUsers) => [...prevUsers, res.data]);
-        } catch (error) {
-            console.error("Error adding user:", error);
-        }
-    };
-
-    const updateUser = async (id, data) => {
-        try {
-            const res = await axios.put(`https://dummyjson.com/users/${id}`, data);
-            console.log(res.data);
-            setUsers(users => users.map(user => (user.id === id ? { ...user, ...res.data } : user)));
-
-        } catch (error) {
-            console.error("Error updating user:", error);
-        }
-    };
+    const { updateUser, addUser } = useUser();
 
     const onSubmit = async (data) => {
-        if (id) {
-            // If the user has an ID, we update the user
-            updateUser(id, data);
-            setUserData({});
-            navigate("/dashboard/users")
-        } else {
-            // Otherwise, we add a new user
-            addUser(data);
-            navigate("/dashboard/users")
+        try {
+            if (id) {
+                await updateUser(id, data);
+                toast.success("User updated successfully! ✅");
+                setUserData({});
+                navigate("/dashboard/users");
+            } else {
+                await addUser(data);
+                toast.success("User added successfully! ✅");
+                navigate("/dashboard/users");
+            }
+        } catch (error) {
+            toast.error("Failed to save user. Please try again.");
+            console.error("Error saving user:", error);
         }
     };
 
     return (
         <>
+            <ToastContainer theme="dark"/>
             <section className="container">
                 <div className="mb-3">
                     {firstName ? <h3>Update User</h3> : <h3>Add User</h3>}
@@ -106,7 +85,7 @@ const UserData = ({ userData,setUserData  }) => {
                                     {...register("email", { required: "Email is required" })}
                                     placeholder="Enter Your Email"
                                     className="form-control mb-3"
-                                    type="text"
+                                    type="email"
                                 />
                                 {errors?.email && (
                                     <span className="text-danger">{errors.email?.message}</span>
@@ -145,7 +124,7 @@ const UserData = ({ userData,setUserData  }) => {
                                     {...register("birthDate", { required: "Date of Birth is required" })}
                                     placeholder="Enter Your Date of Birth"
                                     className="form-control mb-3"
-                                    type="string"
+                                    type="date"
                                 />
                                 {errors?.birthDate && (
                                     <span className="text-danger">{errors.birthDate?.message}</span>
@@ -165,3 +144,5 @@ const UserData = ({ userData,setUserData  }) => {
 };
 
 export default UserData;
+
+

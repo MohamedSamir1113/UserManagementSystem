@@ -27,3 +27,5 @@ const NavBar = ({ setIsCollapsed, isCollapsed }) => {
 }
 
 export default NavBar;
+
+

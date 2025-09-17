@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { Button, Modal } from "react-bootstrap";
 
-const User = ({ user, onDelete ,onUpdate}) => {
+const User = ({ user, onDelete, onUpdate }) => {
     const { email, firstName, image, phone, birthDate, id } = user
     const [show, setShow] = useState(false);
-    //const navigete=useNavigate("/user-data")
 
     const handleDelete = (id) => {
         setShow(false)
@@ -15,10 +14,8 @@ const User = ({ user, onDelete ,onUpdate}) => {
     };
     const handleShow = () => setShow(true);
     
-    function handleUpdate(id,userData) {
-    const {email, firstName, lastName, phone, birthDate}=userData
-    onUpdate(id,userData);
-    
+    function handleUpdate(id, userData) {
+        onUpdate(id, userData);
     }
     return (
         <>
@@ -45,8 +42,8 @@ const User = ({ user, onDelete ,onUpdate}) => {
                     <Button variant="secondary" onClick={() => handleClose()}>
                         Close
                     </Button>
-                    <Button variant="primary" onClick={() => handleDelete(id)}>
-                        Save Changes
+                    <Button variant="danger" onClick={() => handleDelete(id)}>
+                        Delete
                     </Button>
                 </Modal.Footer>
             </Modal>
@@ -55,3 +52,5 @@ const User = ({ user, onDelete ,onUpdate}) => {
 }
 
 export default User;
+
+

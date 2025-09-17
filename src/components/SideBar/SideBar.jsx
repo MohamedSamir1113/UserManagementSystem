@@ -8,14 +8,12 @@ import { useAuth } from "../../contexts/AuthContext";
 
 const SideBar = ({ setIsCollapsed, isCollapsed }) => {
   const {loggedUser}=useAuth()
-  const location = useLocation(); // Get the current URL path
+  const location = useLocation();
   const isScreenSmall = useMediaQuery({ query: "(max-width: 678px)" });
   const [toggled, setToggled] = useState(false);
 
-  // Helper function to determine if the menu item should be active
   const isActive = (path) => location.pathname === path;
 
-  // Helper function to get the style for the active menu item
   const getMenuItemStyle = (path) => ({
     backgroundColor: isActive(path) ? "#FEAF00" : "transparent",
     borderRadius: "5px"
@@ -99,3 +97,5 @@ const SideBar = ({ setIsCollapsed, isCollapsed }) => {
 };
 
 export default SideBar;
+
+
